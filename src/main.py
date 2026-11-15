@@ -3,59 +3,38 @@ import flet as ft
 
 def main(page: ft.Page):
     page.title = "Calculator"
-    result=ft.Text(value="0",color=ft.Colors.WHITE, size=20)
+    page.window.width = 320
+    page.window.height = 480
+
+    display = ft.TextField(value="0", text_align=ft.TextAlign.RIGHT, read_only=True)
+
+    def on_click(e):
+        key = e.control.content
+        if key == "C":
+            display.value = "0"
+        elif key == "=":
+            try:
+                display.value = str(eval(display.value))
+            except Exception:
+                display.value = "Error"
+        else:
+            display.value = key if display.value in ("0", "Error") else display.value + key
+        page.update()
+
+    keys = [
+        ["7", "8", "9", "/"],
+        ["4", "5", "6", "*"],
+        ["1", "2", "3", "-"],
+        ["C", "0", "=", "+"],
+    ]
+
     page.add(
-        ft.Container(
-            expand=True,
-            bgcolor="#212121",
-            border_radius=ft.border_radius.all(10),
-            alignment=ft.Alignment.CENTER,
-        ft.Row(
-            controls=[result],
-            alignment=ft.MainAxisAlignment.END,
-            ),
-        
-        ft.Row(
-            controls=[
-             ft.Button("AC",color=ft.Colors.BLACK, bgcolor="#CFD8DC" ),      
-             ft.Button("+/-", color=ft.Colors.BLACK, bgcolor="#CFD8DC"),
-             ft.Button("%",color=ft.Colors.BLACK, bgcolor="#CFD8DC"),
-             ft.Button("/",color=ft.Colors.BLACK, bgcolor="#FF9800"),
-        ]
-        ),
-        ft.Row(
-            controls=[
-              ft.Button("7",color=ft.Colors.WHITE, bgcolor="#45484C"),
-              ft.Button("8",color=ft.Colors.WHITE, bgcolor="#45484C"),
-              ft.Button("9",color=ft.Colors.WHITE, bgcolor="#45484C"),
-              ft.Button("*",color=ft.Colors.BLACK, bgcolor="#FF9800"),
-        ]
-    ),
-        ft.Row(
-            controls=[
-        ft.Button("4",color=ft.Colors.WHITE, bgcolor="#45484C"),
-        ft.Button("5",color=ft.Colors.WHITE, bgcolor="#45484C"),
-        ft.Button("6",color=ft.Colors.WHITE, bgcolor="#45484C"),
-        ft.Button("-",color=ft.Colors.BLACK, bgcolor="#FF9800"),
-        ]
-    ),
-        ft.Row(
-            controls=[
-        ft.Button("1",color=ft.Colors.WHITE, bgcolor="#45484C"),
-        ft.Button("2",color=ft.Colors.WHITE, bgcolor="#45484C"),
-        ft.Button("3",color=ft.Colors.WHITE, bgcolor="#45484C"),
-        ft.Button("+",color=ft.Colors.BLACK, bgcolor="#FF9800"),
-        ]
-    ),
-        ft.Row(
-            controls=[
-        ft.Button("0",color=ft.Colors.WHITE, bgcolor="#45484C"),
-        ft.Button(".",color=ft.Colors.WHITE, bgcolor="#45484C"),
-        ft.Button("=",color=ft.Colors.BLACK, bgcolor="#FF9800"),
-        ]
-    ),
-        ),
+        display,
+        *[
+            ft.Row([ft.Button(content=k, on_click=on_click, expand=True) for k in row])
+            for row in keys
+        ],
     )
-    
-if __name__ == "__main__":
- ft.run(main)
+
+
+ft.run(main)
