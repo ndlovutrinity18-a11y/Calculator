@@ -31,7 +31,7 @@ def main(page: ft.Page):
     page.add(
         display,
         *[
-            ft.Row([ft.Button(content=k, on_click=on_click, expand=True) for k in row])
+            ft.Row([ft.Button(content=k, on_click=on_click, expand=True ) for k in row])
             for row in keys
         ],
     )
